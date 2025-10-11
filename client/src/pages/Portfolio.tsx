@@ -74,8 +74,8 @@ export default function Portfolio() {
         <Experience />
         <Skills />
         <Certifications />
-        <Testimonials />
-        <Contact />
+        {/* <Testimonials /> */}
+        {/* <Contact /> */}
         <Footer />
         <BackToTop />
       </div>

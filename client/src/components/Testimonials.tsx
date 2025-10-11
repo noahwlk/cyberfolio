@@ -52,7 +52,8 @@ export default function Testimonials() {
           transition={{ duration: 0.5 }}
         >
           <h2 className="text-3xl font-bold font-mono mb-4 inline-block relative">
-            <span className="text-[#00FF8C]">#</span> Testimonials
+            <span className="text-[#00FF8C]">#</span> 
+            <span className="text-white ml-2">Testimonials</span>
             <div className="h-1 w-36 bg-[#00FF8C] mt-2 mx-auto"></div>
           </h2>
           <p className={`max-w-2xl mx-auto theme-text`}>What colleagues and clients say about my work</p>

@@ -44,7 +44,7 @@ export default function Certifications() {
       {/* Background layers */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-[#121212] opacity-90"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_#1e1e1e,_#0b0b0b)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_#1e1e1e,_#0b0b0b)]"></div>
       </div>
 
       {/* Content */}

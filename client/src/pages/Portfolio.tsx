@@ -13,61 +13,101 @@ import { useTheme } from "@/hooks/useTheme";
 
 export default function Portfolio() {
   const { theme } = useTheme();
+
   useEffect(() => {
-    // Smooth scrolling for navigation links
+    // Smooth scrolling
     const handleAnchorClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      if (target.tagName === 'A') {
-        const href = target.getAttribute('href');
-        if (href && href.startsWith('#')) {
+      if (target.tagName === "A") {
+        const href = target.getAttribute("href");
+        if (href && href.startsWith("#")) {
           e.preventDefault();
           const targetElement = document.querySelector(href);
           if (targetElement) {
             const rect = targetElement.getBoundingClientRect();
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollTop =
+              window.pageYOffset || document.documentElement.scrollTop;
             window.scrollTo({
               top: rect.top + scrollTop - 80,
-              behavior: 'smooth'
+              behavior: "smooth",
             });
           }
         }
       }
     };
-
-    document.addEventListener('click', handleAnchorClick);
     
-    // Animate skill bars on scroll
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          if (entry.target.classList.contains('skill-bar')) {
-            const targetWidth = entry.target.getAttribute('data-width');
+    
+     // --- Fonction API déplacée ici ---
+     async function getRootMeData() {
+       const API_URL = import.meta.env.VITE_API;
+       const API_USER = import.meta.env.VITE_API_USER;
+       const API_MDP = import.meta.env.VITE_API_MDP;
+   
+       try {
+         const response = await fetch(`${API_URL}/auth/login`, {
+           method: "POST",
+           headers: {
+             "Content-Type": "application/json",
+             Authorization: `Basic ${btoa(`${API_USER}:${API_MDP}`)}`,
+           },
+         });
+   
+         if (!response.ok) {
+           throw new Error(`Erreur API : ${response.status}`);
+         }
+   
+         const data = await response.json();
+         console.log("✅ Données récupérées :", data);
+         return data;
+       } catch (error) {
+         console.error("❌ Erreur lors de l'appel API :", error);
+         return null;
+       }
+     }
+    // Appel API (exemple)
+    getRootMeData();
+    document.addEventListener("click", handleAnchorClick);
+
+    // Animation barres de compétences
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (
+            entry.isIntersecting &&
+            entry.target.classList.contains("skill-bar")
+          ) {
+            const targetWidth = entry.target.getAttribute("data-width");
             if (targetWidth) {
               (entry.target as HTMLElement).style.width = targetWidth;
             }
+            observer.unobserve(entry.target);
           }
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.2 });
-    
-    const skillBars = document.querySelectorAll('.skill-bar');
-    skillBars.forEach(bar => {
-      // Initially set width to 0
-      (bar as HTMLElement).style.width = '0%';
-      // Observe the element
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    const skillBars = document.querySelectorAll(".skill-bar");
+    skillBars.forEach((bar) => {
+      (bar as HTMLElement).style.width = "0%";
       observer.observe(bar);
     });
 
     return () => {
-      document.removeEventListener('click', handleAnchorClick);
-      skillBars.forEach(bar => observer.unobserve(bar));
+      document.removeEventListener("click", handleAnchorClick);
+      skillBars.forEach((bar) => observer.unobserve(bar));
     };
   }, []);
 
   return (
-    <div className={`${theme === 'dark' ? 'bg-[#121212] text-white' : 'bg-gray-50 text-[#1A1A1A]'} font-sans relative overflow-hidden transition-colors duration-300`}>
-      <div className={`${theme === 'dark' ? 'matrix-bg' : ''}`}>
+    <div
+      className={`${
+        theme === "dark"
+          ? "bg-[#121212] text-white"
+          : "bg-gray-50 text-[#1A1A1A]"
+      } font-sans relative overflow-hidden transition-colors duration-300`}
+    >
+      <div className={`${theme === "dark" ? "matrix-bg" : ""}`}>
         <Navbar />
         <Hero />
         <About />
